@@ -39,7 +39,6 @@ def bootstrap() -> FastAPI:
     app = FastAPI(
         title="FooBar Backend API",
         lifespan=lifespan,
-        docs_url="/api-docs",
         redoc_url=None,
         debug=settings.APP_ENV == "development",
     )
