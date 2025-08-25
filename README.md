@@ -49,5 +49,5 @@ uv sync
 
 ### 프로젝트 실행 방법
 ```bash
-uv run app
+python3 -m app
 ```
