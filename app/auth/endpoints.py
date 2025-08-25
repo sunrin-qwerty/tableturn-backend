@@ -19,7 +19,7 @@ router = APIRouter(
 class AuthEndpoint:
 
     @router.get(
-        "/authorization-url",
+        "/authorization/user",
         description="구글 로그인 URL을 반환합니다.",
     )
     @inject
