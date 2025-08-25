@@ -1,7 +1,5 @@
 import uvicorn
-from app.common.utils.env_validator import get_settings
-
-settings = get_settings()
+from app.common.utils.env_validator import settings
 
 if __name__ == "__main__":
     server_arguments = {"host": "0.0.0.0", "port": settings.SERVER_PORT}

@@ -2,12 +2,13 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
-from app.common.utils.env_validator import get_settings
+from app.common.utils.env_validator import settings
 
-settings = get_settings()
 log_format = (
     "%(asctime)s - %(name)s - %(levelname)s - %(message)s " "(%(filename)s:%(lineno)d)"
 )
+
+__all__ = ["use_logger"]
 
 
 def use_logger(name):

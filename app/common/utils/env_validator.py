@@ -1,9 +1,8 @@
-from typing import Literal, Optional, Type
-from functools import lru_cache
-from pydantic import field_validator
+from typing import Literal
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
 
-__all__ = ["get_settings"]
+__all__ = ["settings"]
 
 
 class Settings(BaseSettings):
@@ -30,6 +29,4 @@ class Settings(BaseSettings):
         return value
 
 
-@lru_cache()
-def get_settings() -> Settings:
-    return Settings()
+settings = Settings()  # type: ignore

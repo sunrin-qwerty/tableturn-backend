@@ -1,5 +1,5 @@
 from typing import Dict, Any, List, TYPE_CHECKING
-from tortoise import Tortoise, generate_config
+from tortoise import Tortoise, generate_config  # type: ignore
 from tortoise.contrib.fastapi import RegisterTortoise
 
 if TYPE_CHECKING:

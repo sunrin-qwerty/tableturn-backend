@@ -1,13 +1,10 @@
-import os
-
 from aiohttp import ClientSession
-from app.common.utils.env_validator import get_settings
+from app.common.utils.env_validator import settings
 from app.common.utils.logger import use_logger
 
 from aiogoogle import Aiogoogle, auth as aiogoogle_auth
 from aiogoogle.auth.creds import UserCreds
 
-settings = get_settings()
 logger = use_logger("google_service")
 
 

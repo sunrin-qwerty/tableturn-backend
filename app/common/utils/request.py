@@ -1,6 +1,8 @@
 from typing import Any
 from aiohttp import ClientSession, ClientResponse
 
+__all__ = ["BaseRequest"]
+
 
 class BaseRequest:
     def __init__(self, session: ClientSession | None = None) -> None:

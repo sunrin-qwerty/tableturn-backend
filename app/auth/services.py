@@ -2,7 +2,7 @@ from jwt import encode as jwt_encode, decode as jwt_decode, PyJWTError
 from passlib.context import CryptContext
 import aiogoogle
 
-from app.common.utils.env_validator import get_settings
+from app.common.utils.env_validator import settings
 from app.common.utils.logger import use_logger
 from app.google.services import GoogleService
 from app.common.exceptions import AuthenticateFailed
@@ -12,7 +12,6 @@ from app.common.types import USER_ID
 from app.members.repository import MemberRepository
 
 logger = use_logger("auth_service")
-settings = get_settings()
 
 
 async def get_phone_by_token(token: str) -> str:
@@ -57,7 +56,9 @@ class AuthService:
     async def login(self, code: str) -> tuple[str, bool]:  # access_token, new_register
         try:
             token_data = await self.google_service.fetch_user_credentials(code)
-            user_data = await self.google_service.fetch_user_info(self.google_service.build_user_credentials(token_data["access_token"]))
+            user_data = await self.google_service.fetch_user_info(
+                self.google_service.build_user_credentials(token_data["access_token"])
+            )
         except aiogoogle.excs.HTTPError as _:
             raise AuthenticateFailed(
                 message="구글 로그인에 실패했습니다. 다시 시도해주세요."

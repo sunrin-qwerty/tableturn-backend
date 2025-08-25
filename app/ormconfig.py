@@ -3,9 +3,7 @@ from app.common.database import (
     DataSource,
     TortoiseConfig,
 )
-from app.common.utils.env_validator import get_settings
-
-settings = get_settings()
+from app.common.utils.env_validator import settings
 
 
 class DatabaseLoader(DatabaseManager):

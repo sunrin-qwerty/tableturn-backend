@@ -4,7 +4,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 
 from app.logger import service_logger
-from app.common.utils.env_validator import get_settings
+from app.common.utils.env_validator import settings
 from app.containers import AppContainers
 from app.ormconfig import DatabaseLoader
 
@@ -12,7 +12,6 @@ from app.hello.endpoints import router as hello_router
 from app.auth.endpoints import router as auth_router
 
 logger = service_logger("bootstrapper")
-settings = get_settings()
 
 
 def bootstrap() -> FastAPI:
