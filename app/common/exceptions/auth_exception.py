@@ -17,6 +17,10 @@ class AuthenticateFailed(APIError):
         super().__init__(message=message, error_data=error_data, headers=headers)
 
 
-class UserNotFound(APIError):
+class NotFound(APIError):
     STATUS_CODE = status.HTTP_400_BAD_REQUEST
     ERROR_CODE = "AUTHENTICATE_FAILED"
+
+class PermissionDenied(APIError):
+    STATUS_CODE = status.HTTP_403_FORBIDDEN
+    ERROR_CODE = "PERMISSION_DENIED"
