@@ -20,12 +20,12 @@ def generate_room_code_with_timer(room_uuid: str, interval: int = 30, digits: in
     hmac_hash = hmac.new(key, msg, hashlib.sha1).digest()
     offset = hmac_hash[-1] & 0x0F
     binary = (
-            ((hmac_hash[offset] & 0x7f) << 24) |
-            ((hmac_hash[offset + 1] & 0xff) << 16) |
-            ((hmac_hash[offset + 2] & 0xff) << 8) |
-            (hmac_hash[offset + 3] & 0xff)
+        ((hmac_hash[offset] & 0x7F) << 24)
+        | ((hmac_hash[offset + 1] & 0xFF) << 16)
+        | ((hmac_hash[offset + 2] & 0xFF) << 8)
+        | (hmac_hash[offset + 3] & 0xFF)
     )
-    code = binary % (10 ** digits)
+    code = binary % (10**digits)
     code_str = str(code).zfill(digits)
 
     is_valid = seconds_left > 0
