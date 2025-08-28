@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     APP_ENV: Literal["development", "production", "testing"]
     SERVER_PORT: int
     DATABASE_URI: str
+    REDIS_URI: str
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLIENT_SECRET: str
     GOOGLE_REDIRECT_URI: str
