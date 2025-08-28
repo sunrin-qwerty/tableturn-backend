@@ -14,4 +14,4 @@ class DatabaseLoader(DatabaseManager):
         generate_schemas=True,
         add_exception_handlers=True,
     )
-    entities = ["app.hello.entities.message", "app.members.entities"]
+    entities = ["app.hello.entities.message", "app.members.entities", "app.kiosk.entities"]
