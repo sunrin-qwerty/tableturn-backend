@@ -1,2 +1,3 @@
-type USER_ID = str | None
-type ACCESS_TOKEN = str | None
+type USER_ID = str
+type ACCESS_TOKEN = str
+type SESSION_ID = str
