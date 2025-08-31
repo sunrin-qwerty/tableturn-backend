@@ -7,6 +7,6 @@ from app.game.services import GameService
 class GameContainer(containers.DeclarativeContainer):
     repository: GameRepository = providers.Singleton(GameRepository)
     service: GameService = providers.Singleton(
-        GameRepository,
+        GameService,
         game_repository=repository,
     )

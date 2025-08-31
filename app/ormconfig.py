@@ -18,4 +18,5 @@ class DatabaseLoader(DatabaseManager):
         "app.hello.entities.message",
         "app.members.entities",
         "app.kiosk.entities",
+        "app.game.entities",
     ]

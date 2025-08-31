@@ -33,6 +33,7 @@ def bootstrap() -> FastAPI:
                 "app.hello.endpoints",
                 "app.auth.endpoints",
                 "app.kiosk.endpoints",
+                "app.game.endpoints",
             ]
         )
         logger.info("Container Wiring complete")
