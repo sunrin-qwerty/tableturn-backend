@@ -7,7 +7,7 @@ from app.common.types import USER_ID
 
 from app.members.entities import MemberEntity
 
-security = HTTPBearer()
+security = HTTPBearer(description="User Authorization Token")
 
 __all__ = ["get_current_user_id", "get_current_user_entity"]
 
