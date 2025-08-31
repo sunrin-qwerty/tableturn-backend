@@ -15,6 +15,7 @@ from app.common.exceptions import APIError
 from app.common.exceptions.auth_exception import NotFound, PermissionDenied
 from app.containers import AppContainers
 from app.common.server import APIResponse
+from app.game.entities.game import GameEntityCreate_Pydantic, GameEntity_Pydantic
 from app.game.services import GameService
 from app.google.services import GoogleService
 from app.kiosk.services import KioskService
@@ -42,36 +43,85 @@ class GameEndpoint:
     )
     @inject
     async def game_list(
-        self, _kiosk_id: str = Depends(get_current_kiosk_id)
-    ) -> APIResponse[dict]: ...
+        self,
+        service: GameService = Depends(Provide[AppContainers.game.service]),
+    ) -> APIResponse[dict]:
+        entities = await service.list_all()
+        return APIResponse(
+            message="Game entity list",
+            data={
+                "games": [
+                    GameEntity_Pydantic(
+                        id=entity.id,
+                        name=entity.name,
+                        description=entity.description,
+                        theme=entity.theme,
+                        min_player_count=entity.min_player_count,
+                        max_player_count=entity.max_player_count,
+                    )
+                    for entity in entities
+                ]
+            },
+        )
 
     @router.get(
-        "/{game_id}",
-        description="게임 상세 조회",
+        "/{game_id}", description="게임 상세 조회"
     )
     @inject
     async def game_detail(
-        self, game_id: str, _kiosk_id: str = Depends(get_current_kiosk_id)
-    ) -> APIResponse[dict]: ...
+        self,
+        game_id: str,
+        service: GameService = Depends(Provide[AppContainers.game.service]),
+    ) -> APIResponse[dict]:
+        entity = await service.get(game_id)
+        return APIResponse(message="Game entity detail", data=GameEntity_Pydantic(
+            id=entity.id,
+            name=entity.name,
+            description=entity.description,
+            theme=entity.theme,
+            min_player_count=entity.min_player_count,
+            max_player_count=entity.max_player_count,
+        ).model_dump())
 
-    @router.post("/admin/create", description="게임 생성")
+    @router.post("/create", description="게임 생성")
     @inject
     async def game_create(
         self,
-        name: str = Body(..., embed=True, title="게임 이름"),
-        description: str | None = Body(None, embed=True, title="게임 설명"),
-        theme: list[str] | None = Body(None, embed=True, title="게임 테마"),
-        min_player_count: int | None = Body(1, embed=True, title="최소 플레이어 수"),
-        max_player_count: int | None = Body(2, embed=True, title="최대 플레이어 수"),
+        data: GameEntityCreate_Pydantic = Body(...),
         user: MemberEntity = Depends(get_current_user_entity),
-        game_service: GameService = Depends(Provide[AppContainers.game.service]),
+        service: GameService = Depends(Provide[AppContainers.game.service]),
     ) -> APIResponse[dict]:
         if not user.is_admin:
             raise PermissionDenied("관리자 권한이 필요합니다.")
-        game = await game_service.create(
-            name=name,
-            description=description,
-            theme=theme,
-            min_player_count=min_player_count,
-            max_player_count=max_player_count,
-        )
+
+        entity = await service.create(**data.dict())
+        return APIResponse(message="Game entity created", data={"id": str(entity.id)})
+
+    @router.delete("/{game_id}", description="게임 삭제")
+    @inject
+    async def game_delete(
+        self,
+        game_id: str,
+        user: MemberEntity = Depends(get_current_user_entity),
+        service: GameService = Depends(Provide[AppContainers.game.service]),
+    ) -> APIResponse[dict]:
+        if not user.is_admin:
+            raise PermissionDenied("관리자 권한이 필요합니다.")
+
+        await service.delete(game_id)
+        return APIResponse(message="Game entity deleted", data={"id": game_id})
+
+    @router.put("/{game_id}", description="게임 수정")
+    @inject
+    async def game_modify(
+        self,
+        game_id: str,
+        data: GameEntityCreate_Pydantic = Body(...),
+        user: MemberEntity = Depends(get_current_user_entity),
+        service: GameService = Depends(Provide[AppContainers.game.service]),
+    ) -> APIResponse[dict]:
+        if not user.is_admin:
+            raise PermissionDenied("관리자 권한이 필요합니다.")
+
+        entity = await service.modify(game_id, **data.dict())
+        return APIResponse(message="Game entity modified", data={"id": str(entity.id)})
