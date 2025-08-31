@@ -1,3 +1,6 @@
+import tortoise.exceptions
+
+from app.common.exceptions.entity_exception import ResourceNotFound
 from app.common.utils.types import MISSING
 from app.game.entities import GameEntity
 
@@ -26,7 +29,12 @@ class GameRepository:
 
     @classmethod
     async def get_by_id(cls, game_id: str, /) -> GameEntity:
-        return await GameEntity.get(id=game_id)
+        try:
+            if not await cls.exist(id=game_id):
+                raise ResourceNotFound(resource_id=game_id)
+            return await GameEntity.get(id=game_id)
+        except tortoise.exceptions.OperationalError:
+            raise ResourceNotFound(resource_id=game_id)
 
     @classmethod
     async def exist(cls, *args, **kwargs) -> bool:
@@ -38,7 +46,14 @@ class GameRepository:
 
     @classmethod
     async def modify(cls, entity_id: str, **kwargs) -> GameEntity:
-        entity = await GameEntity.get(id=entity_id)
+        try:
+            if not await cls.exist(id=entity_id):
+                raise ResourceNotFound(resource_id=entity_id)
+            entity = await GameEntity.get(id=entity_id)
+            await entity.delete()
+        except tortoise.exceptions.OperationalError:
+            raise ResourceNotFound(resource_id=entity_id)
+
         for key, value in kwargs.items():
             if value is not MISSING:
                 setattr(entity, key, value)
@@ -47,5 +62,10 @@ class GameRepository:
 
     @classmethod
     async def delete(cls, entity_id: str) -> None:
-        entity = await GameEntity.get(id=entity_id)
-        await entity.delete()
+        try:
+            if not await cls.exist(id=entity_id):
+                raise ResourceNotFound(resource_id=entity_id)
+            entity = await GameEntity.get(id=entity_id)
+            await entity.delete()
+        except tortoise.exceptions.OperationalError:
+            raise ResourceNotFound(resource_id=entity_id)
