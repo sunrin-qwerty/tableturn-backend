@@ -35,7 +35,7 @@ class KioskRepository:
         session.is_authenticated = True
         session.name = account.name
         session.table_id = account.table_id
-        session.login_key = account.login_key
+        session.login_key = account.token
         await session.save()
         return session
 
