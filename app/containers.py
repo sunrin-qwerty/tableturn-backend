@@ -1,5 +1,6 @@
 from dependency_injector import containers, providers
 
+from app.game.containers import GameContainer
 from app.google.containers import GoogleContainer
 from app.hello.containers import HelloContainer
 from app.auth.containers import AuthContainer
@@ -17,3 +18,4 @@ class AppContainers(containers.DeclarativeContainer):
         member_repository=member.repository,
     )
     kiosk: KioskContainer = providers.Container(KioskContainer)
+    game: GameContainer = providers.Container(GameContainer)
