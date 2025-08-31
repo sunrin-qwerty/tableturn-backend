@@ -10,6 +10,7 @@ __all__ = ["GameEntity"]
 class GameEntity(Model, UUIDEntityMixin):
     name = fields.CharField(max_length=100)
     description = fields.TextField(null=True)
+    image_id = fields.CharField(max_length=100, null=True)
     theme = ArrayField(element_type="text", null=True)
     min_player_count = fields.IntField(default=1)
     max_player_count = fields.IntField(default=1)
