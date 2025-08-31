@@ -8,7 +8,7 @@ from app.hello.dto import hello_dto
 from app.hello.services import HelloService
 from app.containers import AppContainers
 
-from app.common.exceptions import UserNotFound
+from app.common.exceptions import ResourceNotFound
 
 router = APIRouter(
     prefix="/hello",
