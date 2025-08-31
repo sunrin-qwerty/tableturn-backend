@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, Body
 from fastapi_restful.cbv import cbv
 
 from app.auth.services import AuthService
+from app.common.authorization.kiosk import get_current_kiosk_entity
 from app.common.exceptions import APIError
 from app.common.exceptions.auth_exception import NotFound, PermissionDenied
 from app.containers import AppContainers
@@ -66,8 +67,13 @@ class KioskEndpoint:
                 "name": session.name,
                 "table_id": session.table_id,
                 "login_key": session.login_key,
-            }
+            },
         )
+
+    @router.get("/test")
+    @inject
+    async def test(self, _user: KioskAccountEntity = Depends(get_current_kiosk_entity)):
+        return {}
 
     @router.post(
         "/session/authenticate",
@@ -107,6 +113,6 @@ class KioskEndpoint:
             data={
                 "name": account.name,
                 "table_id": account.table_id,
-                "login_key": account.login_key,
-            }
+                "login_key": account.token,
+            },
         )
