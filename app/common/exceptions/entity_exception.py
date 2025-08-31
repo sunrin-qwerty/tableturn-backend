@@ -3,7 +3,7 @@ from app.common.exceptions.base import APIError
 from fastapi import status
 
 
-class UserNotFound(APIError):
+class ResourceNotFound(APIError):
     STATUS_CODE = status.HTTP_404_NOT_FOUND
     ERROR_CODE = "RESOURCE_NOT_FOUND"
 
