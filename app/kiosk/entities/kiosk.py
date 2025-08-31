@@ -8,7 +8,7 @@ __all__ = ["KioskAccountEntity"]
 class KioskAccountEntity(Model, UUIDEntityMixin):
     name = fields.CharField(max_length=100)
     table_id = fields.CharField(max_length=2, unique=True)
-    login_key = fields.CharField(max_length=100)
+    tokenw = fields.CharField(max_length=100)
 
     __repr__ = (
         lambda self: f"<KioskAccount id={self.id}, email={self.email}, is_active={self.is_active}>"
