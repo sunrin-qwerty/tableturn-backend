@@ -1,6 +1,7 @@
 from typing import Annotated, Any
 
 import aredis_om.model.model
+import tortoise.exceptions
 from dependency_injector.wiring import inject, Provide
 
 from fastapi import APIRouter, Depends, Body
@@ -104,7 +105,7 @@ class KioskEndpoint:
         account = await KioskAccountEntity.create(
             name=data.name,
             table_id=data.table_id,
-            login_key=login_key,
+            token=login_key,
         )
 
         await kiosk_service.authenticate_session(data.session_id, account)
@@ -113,6 +114,6 @@ class KioskEndpoint:
             data={
                 "name": account.name,
                 "table_id": account.table_id,
-                "login_key": account.token,
+                "token": account.token,
             },
         )
