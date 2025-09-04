@@ -6,6 +6,7 @@ from app.hello.containers import HelloContainer
 from app.auth.containers import AuthContainer
 from app.kiosk.containers import KioskContainer
 from app.members.containers import MemberContainer
+from app.room.containers import RoomContainer
 
 
 class AppContainers(containers.DeclarativeContainer):
@@ -19,3 +20,4 @@ class AppContainers(containers.DeclarativeContainer):
     )
     kiosk: KioskContainer = providers.Container(KioskContainer)
     game: GameContainer = providers.Container(GameContainer)
+    room: RoomContainer = providers.Container(RoomContainer)
