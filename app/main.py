@@ -13,9 +13,11 @@ from app.hello.endpoints import router as hello_router
 from app.auth.endpoints import router as auth_router
 from app.kiosk.endpoints import router as kiosk_router
 from app.game.endpoints import router as game_router
+from app.room.endpoints import router as room_router
 
 # Redis OM Models
 from app.kiosk.session import KioskLoginSession
+from app.room.session import SessionRoom
 
 logger = service_logger("bootstrapper")
 
@@ -34,6 +36,7 @@ def bootstrap() -> FastAPI:
                 "app.auth.endpoints",
                 "app.kiosk.endpoints",
                 "app.game.endpoints",
+                "app.room.endpoints",
             ]
         )
         logger.info("Container Wiring complete")
@@ -43,6 +46,7 @@ def bootstrap() -> FastAPI:
         )
 
         KioskLoginSession.Meta.database = redis_connection
+        SessionRoom.Meta.database = redis_connection
         logger.info("Redis OM database connection established")
 
         async with DatabaseLoader.load(application):
@@ -74,3 +78,4 @@ server.include_router(auth_router)
 server.include_router(hello_router)
 server.include_router(kiosk_router)
 server.include_router(game_router)
+server.include_router(room_router)
