@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str
     GOOGLE_REDIRECT_URI: str
     JWT_SECRET_KEY: str
+    FRONTEND_URL: str
 
     @staticmethod
     @field_validator("SERVER_PORT")
