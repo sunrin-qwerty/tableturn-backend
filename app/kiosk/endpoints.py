@@ -11,6 +11,7 @@ from app.auth.services import AuthService
 from app.common.authorization.kiosk import get_current_kiosk_entity
 from app.common.exceptions import APIError
 from app.common.exceptions.auth_exception import NotFound, PermissionDenied
+from app.common.utils.env_validator import settings
 from app.containers import AppContainers
 from app.common.server import APIResponse
 from app.google.services import GoogleService
@@ -46,7 +47,11 @@ class KioskEndpoint:
         session_id = await kiosk_service.create_session(user_agent)
         return APIResponse(
             message="Session Created",
-            data={"session_id": session_id, "expired_in": 60 * 5},
+            data={
+                "session_id": session_id,
+                "expired_in": 60 * 5,
+                "login_url": f"{settings.FRONTEND_URL}/admin/kiosk/authenticate?id={session_id}",
+            },
         )  # 5분
 
     @router.get("/session/{session_id}", description="키오스크 세션 인증 여부 확인")
@@ -55,7 +60,6 @@ class KioskEndpoint:
         self,
         session_id: str,
         kiosk_service: KioskService = Depends(Provide[AppContainers.kiosk.service]),
-        # _user: MemberEntity = Depends(get_current_user_entity),
     ) -> APIResponse[dict]:
         try:
             session = await kiosk_service.get_session(session_id)
@@ -70,11 +74,6 @@ class KioskEndpoint:
                 "login_key": session.login_key,
             },
         )
-
-    @router.get("/test")
-    @inject
-    async def test(self, _user: KioskAccountEntity = Depends(get_current_kiosk_entity)):
-        return {}
 
     @router.post(
         "/session/authenticate",
@@ -98,7 +97,9 @@ class KioskEndpoint:
             raise NotFound(message="Session Not Found")
 
         if await KioskAccountEntity.exists(table_id=session.table_id):
-            raise APIError(message="Table ID already in use")
+            raise APIError(
+                message="Table ID already in use (or session already authenticated)"
+            )
 
         login_key = generate_key(35)
 
