@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from aredis_om import JsonModel, EmbeddedJsonModel
 
 
@@ -8,15 +10,15 @@ class SessionMember(EmbeddedJsonModel):
 
 
 class SessionGame(EmbeddedJsonModel):
-    game_id: str
-    game_name: str
-    max_players: int
+    gid: str
+    name: str
+    max_player_count: int
     current_players: int = 0
 
 
 class SessionRoom(JsonModel):
-    room_id: str
     game: SessionGame
+    kiosk_id: str | None = None
     members: list[SessionMember] = []
-    created_at: str  # ISO formatted datetime string
-    updated_at: str  # ISO formatted datetime string
+    created_at: datetime  # ISO formatted datetime string
+    updated_at: datetime  # ISO formatted datetime string
