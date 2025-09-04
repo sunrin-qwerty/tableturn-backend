@@ -64,9 +64,7 @@ class GameEndpoint:
             },
         )
 
-    @router.get(
-        "/{game_id}", description="게임 상세 조회"
-    )
+    @router.get("/{game_id}", description="게임 상세 조회")
     @inject
     async def game_detail(
         self,
@@ -74,14 +72,17 @@ class GameEndpoint:
         service: GameService = Depends(Provide[AppContainers.game.service]),
     ) -> APIResponse[dict]:
         entity = await service.get(game_id)
-        return APIResponse(message="Game entity detail", data=GameEntity_Pydantic(
-            id=entity.id,
-            name=entity.name,
-            description=entity.description,
-            theme=entity.theme,
-            min_player_count=entity.min_player_count,
-            max_player_count=entity.max_player_count,
-        ).model_dump())
+        return APIResponse(
+            message="Game entity detail",
+            data=GameEntity_Pydantic(
+                id=entity.id,
+                name=entity.name,
+                description=entity.description,
+                theme=entity.theme,
+                min_player_count=entity.min_player_count,
+                max_player_count=entity.max_player_count,
+            ).model_dump(),
+        )
 
     @router.post("/create", description="게임 생성")
     @inject
